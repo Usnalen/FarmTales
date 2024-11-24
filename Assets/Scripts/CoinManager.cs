@@ -3,55 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using TMPro; 
 public class CoinManager : MonoBehaviour
 {
-    public int totalCoins; 
-    public Text coinText; 
- 
-    void Start() 
-    { 
-        totalCoins = 100; 
-        UpdateCoinText(); 
-    } 
- 
-    
-    public void AddCoins(int amount) 
-    { 
-        if (amount < 0) return; 
-        totalCoins += amount; 
-        UpdateCoinText(); 
-    } 
- 
-   
-    public void SpendCoins(int amount)
-       {
-           if (totalCoins >= amount)
-           {
-               totalCoins -= amount;
-               UpdateCoinText();
-           }
-           else
-           {
-               Debug.Log("Недостаточно монет!");
-           }
-       }
- 
-    
-     public void BuyItem(int itemCost)
-   {
-       SpendCoins(itemCost);
-       Debug.Log("Куплено!");
-   }
+    private int coinCount;
+    public TMP_Text coinText; 
 
-   public void SellItem(int itemSalePrice)
-   {
-       AddCoins(itemSalePrice);
-       Debug.Log("Продано!");
-   }
+    void Start() {
+        coinCount = 100; 
+        UpdateCoinText();
+    }
+
     
-    private void UpdateCoinText() 
-    { 
-        coinText.text = "Монеты: " + totalCoins.ToString(); 
+    public void AddCoins(int amount) {
+        if (amount < 0) {
+            Debug.LogError("Добавляемая сумма не может быть отрицательной.");
+            return;
+        }
+        coinCount += amount;
+        UpdateCoinText();
+    }
+
+    
+    public void SubtractCoins(int amount) {
+        if (amount < 0) {
+            Debug.LogError("Вычитаемая сумма не может быть отрицательной.");
+            return;
+        }
+        if (coinCount >= amount) {
+            coinCount -= amount;
+            UpdateCoinText();
+        } else {
+            Debug.LogWarning("Не хватает монет!");
+        }
+    }
+
+    
+    private void UpdateCoinText() {
+        if (coinText != null) {
+            coinText.text = coinCount.ToString();
+        } 
+        else {
+            Debug.LogError("CoinText не назначен в инспекторе!");
+        }
     }
 }
+
+
