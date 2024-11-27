@@ -72,7 +72,11 @@ public class FieldController : MonoBehaviour
         }
 
         // После завершения роста заменяем спрайт на полностью выросшую пшеницу
-        GetComponent<SpriteRenderer>().sprite = grownFieldSprite; 
+        GetComponent<SpriteRenderer>().sprite = grownFieldSprite;
+
+        // Устанавливаем позицию для grownFieldSprite
+        transform.position = new Vector3(277, -117, 0);
+
         ShowHarvestingOptions(); // Показываем кнопку сбора урожая
     }
 
@@ -83,6 +87,8 @@ public class FieldController : MonoBehaviour
             isPlanted = false;
             growthTimer = 0f;
             GetComponent<SpriteRenderer>().sprite = emptyFieldSprite;
+
+            transform.position = new Vector3(277, -134, 0);
 
             // Скрываем кнопки после сбора урожая
             harvestButton.gameObject.SetActive(false);
