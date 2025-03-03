@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // Не забудьте подключить этот namespace для работы с TMP
+using TMPro;
 
 public class FieldController : MonoBehaviour
 {
@@ -12,6 +12,7 @@ public class FieldController : MonoBehaviour
     public Button harvestButton; // Кнопка "Собрать урожай"
     public Button upgradeButton; // Кнопка "Улучшение"
     public TMP_Text growthTimerText; // Текст для отображения таймера
+    public Image growthProgressBar; // Полоска прогресса
 
     private bool isPlanted = false;
     private float growthTime = 40f; // Начальное время роста в секундах
@@ -28,6 +29,7 @@ public class FieldController : MonoBehaviour
         harvestButton.gameObject.SetActive(false);
         upgradeButton.gameObject.SetActive(false);
         growthTimerText.gameObject.SetActive(false); // Скрываем текст таймера в начале
+        growthProgressBar.gameObject.SetActive(false); // Скрываем полоску прогресса в начале
     }
 
     private void OnMouseDown()
@@ -62,6 +64,7 @@ public class FieldController : MonoBehaviour
         plantButton.gameObject.SetActive(false);
         upgradeButton.gameObject.SetActive(false);
         growthTimerText.gameObject.SetActive(true); // Показываем текст таймера
+        growthProgressBar.gameObject.SetActive(true); // Показываем полоску прогресса
     }
 
     private IEnumerator GrowthTimer()
@@ -70,12 +73,14 @@ public class FieldController : MonoBehaviour
         {
             growthTimer += Time.deltaTime;
             UpdateGrowthTimerText(); // Обновляем текст таймера
+            UpdateGrowthProgressBar(); // Обновляем полоску прогресса
             yield return null;
         }
 
         GetComponent<SpriteRenderer>().sprite = grownFieldSprite;
         ShowHarvestingOptions(); // Показываем кнопку сбора урожая
         growthTimerText.gameObject.SetActive(false); // Скрываем текст таймера после завершения
+        growthProgressBar.gameObject.SetActive(false); // Скрываем полоску прогресса после завершения
     }
 
     private void UpdateGrowthTimerText()
@@ -85,9 +90,14 @@ public class FieldController : MonoBehaviour
         growthTimerText.text = "Время до сбора: " + seconds + " секунд"; // Обновляем текст с оставшимся временем
     }
 
+    private void UpdateGrowthProgressBar()
+    {
+        growthProgressBar.fillAmount = growthTimer / growthTime; // Обновляем заполнение полоски
+    }
+
     public void HarvestCrop()
     {
-        if (isPlanted)
+        if (isPlanted && growthTimer >= growthTime) // Проверяем, созрел ли урожай
         {
             isPlanted = false;
             growthTimer = 0f;
