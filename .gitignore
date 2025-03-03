@@ -70,5 +70,4 @@ crashlytics-build.properties
 # VS Code cache directory
 .vscode/
 
-# MacOs .DS_Store file
-.DS_Store
+
