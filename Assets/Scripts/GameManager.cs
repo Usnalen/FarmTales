@@ -52,7 +52,14 @@ public class GameManager : MonoBehaviour
     {
         if (resourceType == ResourceType.None) 
             return false;
-
+    
+        // Проверяем, есть ли место в амбаре
+        if (Barn.Instance != null && !Barn.Instance.CanAddResources(amount))
+        {
+            Debug.Log("Амбар переполнен! Невозможно добавить ресурсы.");
+            return false;
+        }
+    
         if (resourceCounts.ContainsKey(resourceType))
         {
             resourceCounts[resourceType] += amount;
@@ -63,7 +70,13 @@ public class GameManager : MonoBehaviour
         }
     
         UpdateResourceDisplay(resourceType);
-        
+    
+        // Если UI амбара активен, обновляем его
+        if (Barn.Instance != null)
+        {
+            Barn.Instance.UpdateBarnUI();
+        }
+    
         return true;
     }
     
