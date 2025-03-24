@@ -6,5 +6,13 @@ public enum ResourceType
     Raspberry,
     Strawberry,
     Eggs,
-    Milk
+    Milk,
+    Bread,
+    Butter,
+    Cream,
+    Bun,
+    Cake, 
+    AppleCake,
+    RaspberryCake,
+    StrawberryCake
 }
