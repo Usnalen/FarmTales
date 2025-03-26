@@ -35,7 +35,6 @@ public class Recipe
     }
 }
 
-// Сериализуемая версия рецепта для использования в инспекторе
 [System.Serializable]
 public class SerializableRecipe
 {
@@ -51,7 +50,6 @@ public class SerializableRecipe
         public int amount;
     }
     
-    // Преобразование в обычный рецепт
     public Recipe ToRecipe()
     {
         Dictionary<ResourceType, int> ingredientsDict = new Dictionary<ResourceType, int>();

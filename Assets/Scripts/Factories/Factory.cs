@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,12 +22,12 @@ public abstract class Factory : MonoBehaviour
     
     [Header("UI Elements")]
     [SerializeField] protected GameObject factoryUI;
-    [SerializeField] protected Button createButton;
     [SerializeField] protected Button closeButton;
-    [SerializeField] protected Transform resultSlotParent;
-    [SerializeField] protected Transform ingredientSlotsParent;
     [SerializeField] protected Transform storageItemsParent;
     [SerializeField] protected TextMeshProUGUI factoryTitle;
+    
+    [Header("Formula Rows")]
+    [SerializeField] protected List<FormulaRow> formulaRows = new List<FormulaRow>();
     
     [Header("Resource Spawn Points")]
     [SerializeField] protected List<ResourceSpawnPoint> resourceSpawnPoints = new List<ResourceSpawnPoint>();
@@ -39,10 +40,7 @@ public abstract class Factory : MonoBehaviour
     [SerializeField] protected List<ResourceIcon> resourceIcons = new List<ResourceIcon>();
     
     protected Dictionary<ResourceType, Sprite> resourceIconsDict = new Dictionary<ResourceType, Sprite>();
-    protected List<IngredientSlot> ingredientSlots = new List<IngredientSlot>();
-    protected IngredientSlot resultSlot;
     protected Dictionary<ResourceType, DraggableItem> resourceItems = new Dictionary<ResourceType, DraggableItem>();
-    protected List<Recipe> recipes = new List<Recipe>();
     
     protected virtual void Awake()
     {
@@ -62,15 +60,12 @@ public abstract class Factory : MonoBehaviour
             }
         }
         
-        if (ingredientSlotsParent != null)
+        // Если FormulaRows не были заданы в инспекторе, найдем их
+        if (formulaRows.Count == 0)
         {
-            IngredientSlot[] slots = ingredientSlotsParent.GetComponentsInChildren<IngredientSlot>();
-            ingredientSlots.AddRange(slots);
-        }
-        
-        if (resultSlotParent != null)
-        {
-            resultSlot = resultSlotParent.GetComponentInChildren<IngredientSlot>();
+            // Находим все строки формул в дочерних объектах
+            FormulaRow[] rows = GetComponentsInChildren<FormulaRow>(true);
+            formulaRows.AddRange(rows);
         }
     }
     
@@ -81,18 +76,12 @@ public abstract class Factory : MonoBehaviour
             factoryUI.SetActive(false);
         }
         
-        if (createButton != null)
-        {
-            createButton.onClick.AddListener(OnCreateButtonClicked);
-        }
-        
         if (closeButton != null)
         {
             closeButton.onClick.AddListener(CloseFactoryUI);
         }
     }
     
-    // Регистрируем фабрику при активации
     protected virtual void OnEnable()
     {
         if (GameManager.Instance != null)
@@ -101,7 +90,6 @@ public abstract class Factory : MonoBehaviour
         }
     }
     
-    // Отменяем регистрацию при деактивации
     protected virtual void OnDisable()
     {
         if (GameManager.Instance != null)
@@ -166,12 +154,13 @@ public abstract class Factory : MonoBehaviour
         {
             UpdateResourceDisplay(resourceType);
         }
+        
+        Canvas.ForceUpdateCanvases();
     }
     
-    // Метод для обновления конкретного ресурса
     public virtual void UpdateResourceDisplay(ResourceType resourceType)
     {
-        if (GameManager.Instance == null || storageItemsParent == null ||
+        if (GameManager.Instance == null || storageItemsParent == null || 
             !GetAllowedStorageResourceTypes().Contains(resourceType))
             return;
             
@@ -188,39 +177,23 @@ public abstract class Factory : MonoBehaviour
                     item.SetItem(GetResourceIcon(resourceType), count, resourceType);
                     item.gameObject.SetActive(true);
                     SetDraggableItemActive(item, true);
-                    Debug.Log($"Обновлен ресурс {resourceType}: {count} (активен)");
                 }
                 else
                 {
                     item.SetItem(GetResourceIcon(resourceType), 0, resourceType);
                     SetDraggableItemActive(item, false);
-                    Debug.Log($"Обновлен ресурс {resourceType}: пустышка (неактивен)");
                 }
 
-                Canvas parentCanvas = storageItemsParent.GetComponentInParent<Canvas>();
-                if (parentCanvas != null)
-                {
-                    Canvas.ForceUpdateCanvases();
-
-                    CanvasScaler scaler = parentCanvas.GetComponent<CanvasScaler>();
-                    if (scaler != null)
-                    {
-                        float oldScale = scaler.scaleFactor;
-                        scaler.scaleFactor = oldScale + 0.001f;
-                        scaler.scaleFactor = oldScale;
-                    }
-                }
+                Canvas.ForceUpdateCanvases();
             }
         }
         else if (count > 0 || (factoryUI != null && factoryUI.activeSelf))
         {
             CreateResourceItemAtPosition(resourceType, count);
-            Debug.Log($"Создан новый элемент для {resourceType}: {count}");
         }
     }
     
-    // Метод для получения иконки ресурса
-    protected Sprite GetResourceIcon(ResourceType resourceType)
+    public Sprite GetResourceIcon(ResourceType resourceType)
     {
         if (resourceIconsDict.TryGetValue(resourceType, out Sprite icon))
         {
@@ -229,7 +202,6 @@ public abstract class Factory : MonoBehaviour
         return null;
     }
     
-    // Метод для создания ресурса в определенной позиции
     protected virtual void CreateResourceItemAtPosition(ResourceType resourceType, int count)
     {
         if (storageItemPrefab == null || storageItemsParent == null)
@@ -261,7 +233,6 @@ public abstract class Factory : MonoBehaviour
         }
     }
     
-    // Включение/выключение интерактивности для DraggableItem
     protected void SetDraggableItemActive(DraggableItem item, bool active)
     {
         if (item == null) return;
@@ -275,111 +246,20 @@ public abstract class Factory : MonoBehaviour
         }
     }
     
-    protected virtual void OnCreateButtonClicked()
-    {
-        Dictionary<ResourceType, int> providedIngredients = new Dictionary<ResourceType, int>();
-        
-        foreach (IngredientSlot slot in ingredientSlots)
-        {
-            ResourceType type = slot.GetResourceType();
-            if (type != ResourceType.None)
-            {
-                int slotCount = slot.GetCount();
-                if (providedIngredients.ContainsKey(type))
-                {
-                    providedIngredients[type] += slotCount;
-                }
-                else
-                {
-                    providedIngredients[type] = slotCount;
-                }
-            }
-        }
-        
-        Recipe matchingRecipe = FindMatchingRecipe(providedIngredients);
-        
-        if (matchingRecipe != null)
-        {
-            bool hasEnoughIngredients = true;
-            foreach (var ingredient in matchingRecipe.ingredients)
-            {
-                if (!providedIngredients.ContainsKey(ingredient.Key) || 
-                    providedIngredients[ingredient.Key] < ingredient.Value)
-                {
-                    hasEnoughIngredients = false;
-                    break;
-                }
-            }
-            
-            if (hasEnoughIngredients)
-            {
-                foreach (var ingredient in matchingRecipe.ingredients)
-                {
-                    int remainingAmount = ingredient.Value;
-                    
-                    foreach (IngredientSlot slot in ingredientSlots)
-                    {
-                        if (slot.GetResourceType() == ingredient.Key && remainingAmount > 0)
-                        {
-                            int amountInSlot = slot.GetCount();
-                            int amountToRemove = Mathf.Min(amountInSlot, remainingAmount);
-                            
-                            slot.RemoveAmount(amountToRemove);
-                            remainingAmount -= amountToRemove;
-                            
-                            if (remainingAmount <= 0)
-                                break;
-                        }
-                    }
-                }
-                
-                if (resultSlot != null)
-                {
-                    ResourceType currentResultType = resultSlot.GetResourceType();
-                    
-                    if (currentResultType == matchingRecipe.resultType)
-                    {
-                        resultSlot.AddAmount(1);
-                        Debug.Log($"Добавлен {matchingRecipe.recipeName} в результат (всего: {resultSlot.GetCount()})");
-                    }
-                    else
-                    {
-                        if (currentResultType != ResourceType.None && GameManager.Instance != null)
-                        {
-                            GameManager.Instance.AddResource(currentResultType, resultSlot.GetCount());
-                            Debug.Log($"Возвращен старый продукт {currentResultType} в хранилище");
-                        }
-                        
-                        Sprite resultIcon = matchingRecipe.resultIcon;
-                        if (resultIcon == null && resourceIconsDict.TryGetValue(matchingRecipe.resultType, out resultIcon))
-                        {
-                        }
-                        
-                        resultSlot.SetResource(matchingRecipe.resultType, 1, resultIcon);
-                        Debug.Log($"Создан новый {matchingRecipe.recipeName}");
-                    }
-                }
-            }
-            else
-            {
-                Debug.Log("Недостаточно ингредиентов для создания продукта");
-            }
-        }
-        else
-        {
-            Debug.Log("Нет подходящего рецепта для этих ингредиентов");
-        }
-    }
     
-    // Метод для проверки, подходит ли ресурс для конкретного слота
     public virtual bool IsValidIngredientForSlot(IngredientSlot slot, ResourceType resourceType)
     {
+        foreach (FormulaRow row in formulaRows)
+        {
+            if (row.ContainsSlot(slot))
+            {
+                Recipe recipe = row.GetRecipe();
+                return recipe != null && recipe.ingredients.ContainsKey(resourceType);
+            }
+        }
+        
         return GetAllowedStorageResourceTypes().Contains(resourceType);
     }
     
-    // Метод для получения списка разрешенных типов ресурсов
     protected abstract List<ResourceType> GetAllowedStorageResourceTypes();
-    
-    // Метод для нахождения подходящего рецепта
-    protected abstract Recipe FindMatchingRecipe(Dictionary<ResourceType, int> providedIngredients);
 }
