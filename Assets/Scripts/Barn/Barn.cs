@@ -12,10 +12,7 @@ public class Barn : MonoBehaviour
     [SerializeField] private GameObject barnUI; // Панель UI амбара
     [SerializeField] private Transform itemsContainer; // Контейнер для отображения предметов
     [SerializeField] private GameObject itemPrefab; // Префаб для отображения одного типа предмета
-    [SerializeField] private TextMeshProUGUI capacityText; // Текст для отображения текущей вместимости
-    
-    [Header("Иконки ресурсов")]
-    [SerializeField] private List<ResourceIcon> resourceIcons = new List<ResourceIcon>();
+    [SerializeField] private TextMeshProUGUI capacityText; // Текст для отображения текущей вместимост
     
     // Словарь иконок ресурсов для быстрого доступа
     private Dictionary<ResourceType, Sprite> resourceIconsDict = new Dictionary<ResourceType, Sprite>();
@@ -38,16 +35,6 @@ public class Barn : MonoBehaviour
         else if (_instance != this)
         {
             Destroy(gameObject);
-            return;
-        }
-        
-        // Инициализация словаря иконок
-        foreach (ResourceIcon icon in resourceIcons)
-        {
-            if (!resourceIconsDict.ContainsKey(icon.resourceType))
-            {
-                resourceIconsDict.Add(icon.resourceType, icon.icon);
-            }
         }
     }
     
@@ -123,8 +110,8 @@ public class Barn : MonoBehaviour
         
         if (itemDisplay != null)
         {
-            Sprite icon = null;
-            if (resourceIconsDict.TryGetValue(resourceType, out icon))
+            Sprite icon = ResourceIconManager.Instance.GetIcon(resourceType);
+            if (icon != null)
             {
                 itemDisplay.SetItem(icon, count, resourceType);
             }

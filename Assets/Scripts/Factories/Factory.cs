@@ -35,23 +35,11 @@ public abstract class Factory : MonoBehaviour
     
     [Header("Prefabs")]
     [SerializeField] protected GameObject storageItemPrefab;
-    
-    [Header("Icons")]
-    [SerializeField] protected List<ResourceIcon> resourceIcons = new List<ResourceIcon>();
-    
-    protected Dictionary<ResourceType, Sprite> resourceIconsDict = new Dictionary<ResourceType, Sprite>();
+
     protected Dictionary<ResourceType, DraggableItem> resourceItems = new Dictionary<ResourceType, DraggableItem>();
     
     protected virtual void Awake()
     {
-        foreach (ResourceIcon icon in resourceIcons)
-        {
-            if (!resourceIconsDict.ContainsKey(icon.resourceType))
-            {
-                resourceIconsDict.Add(icon.resourceType, icon.icon);
-            }
-        }
-        
         foreach (ResourceSpawnPoint spawnPoint in resourceSpawnPoints)
         {
             if (!resourceSpawnPositions.ContainsKey(spawnPoint.resourceType))
@@ -195,11 +183,7 @@ public abstract class Factory : MonoBehaviour
     
     public Sprite GetResourceIcon(ResourceType resourceType)
     {
-        if (resourceIconsDict.TryGetValue(resourceType, out Sprite icon))
-        {
-            return icon;
-        }
-        return null;
+        return ResourceIconManager.Instance.GetIcon(resourceType);
     }
     
     protected virtual void CreateResourceItemAtPosition(ResourceType resourceType, int count)
