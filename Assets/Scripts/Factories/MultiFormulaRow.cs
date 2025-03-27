@@ -1,21 +1,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FormulaRow : BaseFormulaRow
+public class MultiFormulaRow : BaseFormulaRow
 {
-    [Header("Рецепт")]
-    [SerializeField] private SerializableRecipe recipeData;
+    [Header("Варианты рецептов")]
+    [SerializeField] private List<SerializableRecipe> variantRecipes = new List<SerializableRecipe>();
     
-    protected Recipe recipe;
+    protected List<Recipe> recipes = new List<Recipe>();
+    protected Recipe currentDisplayedRecipe; // Для отображения в UI
     
     protected override void InitializeRecipe()
     {
-        if (recipeData != null)
+        recipes.Clear();
+        
+        foreach (var variantRecipe in variantRecipes)
         {
-            recipe = recipeData.ToRecipe();
+            recipes.Add(variantRecipe.ToRecipe());
+        }
+        
+        // Выбираем первый рецепт для отображения
+        if (recipes.Count > 0)
+        {
+            currentDisplayedRecipe = recipes[0];
             
-            // Настройка текста формулы
-            if (equationText != null && recipe != null)
+            if (equationText != null)
             {
                 UpdateFormulaText();
             }
@@ -24,22 +32,29 @@ public class FormulaRow : BaseFormulaRow
     
     protected override void UpdateFormulaText()
     {
-        if (recipe == null || equationText == null) return;
+        if (currentDisplayedRecipe == null || equationText == null) return;
         
         string formula = "";
-        foreach (var ingredient in recipe.ingredients)
+        foreach (var ingredient in currentDisplayedRecipe.ingredients)
         {
             if (formula.Length > 0) formula += " + ";
             formula += $"{ingredient.Value} {ingredient.Key}";
         }
         
-        formula += " = " + recipe.recipeName;
+        formula += " = " + currentDisplayedRecipe.recipeName;
+        
+        // Если есть несколько рецептов, показываем это
+        if (recipes.Count > 1)
+        {
+            formula += $" (1/{recipes.Count})";
+        }
+        
         equationText.text = formula;
     }
     
     public override void OnCreateButtonClicked()
     {
-        if (recipe == null) return;
+        if (recipes.Count == 0) return;
         
         Dictionary<ResourceType, int> providedIngredients = new Dictionary<ResourceType, int>();
         
@@ -61,21 +76,23 @@ public class FormulaRow : BaseFormulaRow
             }
         }
 
-        // Проверяем соответствие ингредиентов рецепту
-        if (recipe.MatchesIngredients(providedIngredients))
+        // Проверяем каждый рецепт на соответствие
+        foreach (var recipe in recipes)
         {
-            // Расходуем ингредиенты
-            ConsumeIngredients();
-            // Создаем результат
-            CreateResult();
+            if (recipe.MatchesIngredients(providedIngredients))
+            {
+                // Расходуем ингредиенты
+                ConsumeIngredients(recipe);
+                // Создаем результат
+                CreateResult(recipe);
+                return; // Выходим после первого подходящего рецепта
+            }
         }
-        else
-        {
-            Debug.Log("Недостаточно ингредиентов для создания продукта");
-        }
+        
+        Debug.Log("Недостаточно ингредиентов для создания продукта");
     }
     
-    protected void ConsumeIngredients()
+    protected void ConsumeIngredients(Recipe recipe)
     {
         foreach (var ingredient in recipe.ingredients)
         {
@@ -98,7 +115,7 @@ public class FormulaRow : BaseFormulaRow
         }
     }
     
-    protected void CreateResult()
+    protected void CreateResult(Recipe recipe)
     {
         if (resultSlot == null) return;
         
@@ -130,8 +147,25 @@ public class FormulaRow : BaseFormulaRow
         }
     }
     
-    public Recipe GetRecipe()
+    // Метод для циклического переключения между рецептами (можно привязать к кнопке)
+    public void CycleDisplayedRecipe()
     {
-        return recipe;
+        if (recipes.Count <= 1) return;
+        
+        int currentIndex = recipes.IndexOf(currentDisplayedRecipe);
+        int nextIndex = (currentIndex + 1) % recipes.Count;
+        
+        currentDisplayedRecipe = recipes[nextIndex];
+        UpdateFormulaText();
+    }
+    
+    public List<Recipe> GetRecipes()
+    {
+        return recipes;
+    }
+    
+    public Recipe GetCurrentRecipe()
+    {
+        return currentDisplayedRecipe;
     }
 }

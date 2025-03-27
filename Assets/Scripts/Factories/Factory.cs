@@ -27,7 +27,7 @@ public abstract class Factory : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI factoryTitle;
     
     [Header("Formula Rows")]
-    [SerializeField] protected List<FormulaRow> formulaRows = new List<FormulaRow>();
+    [SerializeField] protected List<BaseFormulaRow> formulaRows = new List<BaseFormulaRow>();
     
     [Header("Resource Spawn Points")]
     [SerializeField] protected List<ResourceSpawnPoint> resourceSpawnPoints = new List<ResourceSpawnPoint>();
@@ -68,6 +68,8 @@ public abstract class Factory : MonoBehaviour
         {
             closeButton.onClick.AddListener(CloseFactoryUI);
         }
+        
+        
     }
     
     protected virtual void OnEnable()
@@ -233,15 +235,31 @@ public abstract class Factory : MonoBehaviour
     
     public virtual bool IsValidIngredientForSlot(IngredientSlot slot, ResourceType resourceType)
     {
-        foreach (FormulaRow row in formulaRows)
+        foreach (BaseFormulaRow row in formulaRows)
         {
             if (row.ContainsSlot(slot))
             {
-                Recipe recipe = row.GetRecipe();
-                return recipe != null && recipe.ingredients.ContainsKey(resourceType);
+                FormulaRow singleRow = row as FormulaRow;
+                if (singleRow != null)
+                {
+                    Recipe recipe = singleRow.GetRecipe();
+                    return recipe != null && recipe.ingredients.ContainsKey(resourceType);
+                }
+            
+                MultiFormulaRow multiRow = row as MultiFormulaRow;
+                if (multiRow != null)
+                {
+                    foreach (Recipe recipe in multiRow.GetRecipes())
+                    {
+                        if (recipe != null && recipe.ingredients.ContainsKey(resourceType))
+                        {
+                            return true;
+                        }
+                    }
+                }
             }
         }
-        
+    
         return GetAllowedStorageResourceTypes().Contains(resourceType);
     }
     

@@ -40,7 +40,6 @@ public class SerializableRecipe
 {
     public string recipeName;
     public ResourceType resultType;
-    public Sprite resultIcon;
     public List<RecipeIngredient> ingredients = new List<RecipeIngredient>();
     
     [System.Serializable]
@@ -60,7 +59,7 @@ public class SerializableRecipe
         }
         
         Recipe recipe = new Recipe(recipeName, resultType, ingredientsDict);
-        recipe.resultIcon = resultIcon;
+        recipe.resultIcon = ResourceIconManager.Instance.GetIcon(resultType);
         return recipe;
     }
 }

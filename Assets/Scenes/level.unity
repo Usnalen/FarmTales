@@ -1839,7 +1839,6 @@ MonoBehaviour:
   recipeData:
     recipeName: "\u0425\u043B\u0435\u0431"
     resultType: 7
-    resultIcon: {fileID: 21300000, guid: eea083a6fddf5654d906ae55af0ce28f, type: 3}
     ingredients:
     - resourceType: 1
       amount: 1
@@ -2628,23 +2627,68 @@ MonoBehaviour:
   m_GameObject: {fileID: 188981111}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c713af3914218e43909a065ece2dcdf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ca705c3e94ed934191185195e774290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ingredientSlots:
   - {fileID: 256370377}
   - {fileID: 2046476236}
+  - {fileID: 1602701781}
+  - {fileID: 2043782624}
+  - {fileID: 970825584}
   resultSlot: {fileID: 1020013145}
   createButton: {fileID: 557010291}
   equationText: {fileID: 0}
-  recipeData:
-    recipeName: "\u0425\u043B\u0435\u0431"
-    resultType: 7
-    resultIcon: {fileID: 21300000, guid: eea083a6fddf5654d906ae55af0ce28f, type: 3}
+  variantRecipes:
+  - recipeName: 
+    resultType: 12
     ingredients:
-    - resourceType: 1
+    - resourceType: 7
       amount: 1
-    - resourceType: 5
+    - resourceType: 6
+      amount: 1
+    - resourceType: 8
+      amount: 1
+    - resourceType: 9
+      amount: 1
+    - resourceType: 2
+      amount: 1
+  - recipeName: 
+    resultType: 13
+    ingredients:
+    - resourceType: 7
+      amount: 1
+    - resourceType: 6
+      amount: 1
+    - resourceType: 8
+      amount: 1
+    - resourceType: 9
+      amount: 1
+    - resourceType: 3
+      amount: 1
+  - recipeName: 
+    resultType: 14
+    ingredients:
+    - resourceType: 7
+      amount: 1
+    - resourceType: 6
+      amount: 1
+    - resourceType: 8
+      amount: 1
+    - resourceType: 9
+      amount: 1
+    - resourceType: 4
+      amount: 1
+  - recipeName: 
+    resultType: 11
+    ingredients:
+    - resourceType: 7
+      amount: 1
+    - resourceType: 6
+      amount: 1
+    - resourceType: 8
+      amount: 1
+    - resourceType: 9
       amount: 1
 --- !u!1 &197927918
 GameObject:
@@ -5756,12 +5800,11 @@ MonoBehaviour:
   equationText: {fileID: 0}
   recipeData:
     recipeName: "\u0425\u043B\u0435\u0431"
-    resultType: 7
-    resultIcon: {fileID: 21300000, guid: eea083a6fddf5654d906ae55af0ce28f, type: 3}
+    resultType: 10
     ingredients:
-    - resourceType: 1
+    - resourceType: 6
       amount: 1
-    - resourceType: 5
+    - resourceType: 7
       amount: 1
 --- !u!1 &461872120
 GameObject:
@@ -7961,7 +8004,6 @@ MonoBehaviour:
   recipeData:
     recipeName: "\u0421\u043B\u0438\u0432\u043A\u0438"
     resultType: 9
-    resultIcon: {fileID: 21300000, guid: a9df93041f4f8ac47b3a1e6c4864c4f8, type: 3}
     ingredients:
     - resourceType: 6
       amount: 2
@@ -15705,13 +15747,6 @@ MonoBehaviour:
   - resourceType: 5
     spawnPosition: {x: 200, y: 0}
   storageItemPrefab: {fileID: 4821767287982969349, guid: dea780d3148f84a4f9462559f1813c3a, type: 3}
-  resourceIcons:
-  - resourceType: 1
-    icon: {fileID: 21300000, guid: 708780b0bfb7a814280cebf49a67c998, type: 3}
-  - resourceType: 5
-    icon: {fileID: 21300000, guid: 90802c1c7e9c5c7459fecda0137b929b, type: 3}
-  - resourceType: 7
-    icon: {fileID: 21300000, guid: eea083a6fddf5654d906ae55af0ce28f, type: 3}
 --- !u!1 &1241862687
 GameObject:
   m_ObjectHideFlags: 0
@@ -16055,7 +16090,6 @@ MonoBehaviour:
   recipeData:
     recipeName: "\u041C\u0430\u0441\u043B\u043E"
     resultType: 8
-    resultIcon: {fileID: 21300000, guid: a9df93041f4f8ac47b3a1e6c4864c4f8, type: 3}
     ingredients:
     - resourceType: 6
       amount: 1
@@ -16803,27 +16837,6 @@ MonoBehaviour:
   - resourceType: 4
     spawnPosition: {x: 1200, y: 0}
   storageItemPrefab: {fileID: 4821767287982969349, guid: dea780d3148f84a4f9462559f1813c3a, type: 3}
-  resourceIcons:
-  - resourceType: 6
-    icon: {fileID: 21300000, guid: baab38330d7ac1f4581ba73331081af4, type: 3}
-  - resourceType: 7
-    icon: {fileID: 21300000, guid: eea083a6fddf5654d906ae55af0ce28f, type: 3}
-  - resourceType: 8
-    icon: {fileID: 21300000, guid: a9df93041f4f8ac47b3a1e6c4864c4f8, type: 3}
-  - resourceType: 9
-    icon: {fileID: 21300000, guid: a9df93041f4f8ac47b3a1e6c4864c4f8, type: 3}
-  - resourceType: 2
-    icon: {fileID: 21300000, guid: e6d671fa17a1b37489c973b4f5e2a2c2, type: 3}
-  - resourceType: 3
-    icon: {fileID: 21300000, guid: c087728d49d09394da287a16c8a1ed33, type: 3}
-  - resourceType: 4
-    icon: {fileID: 21300000, guid: 069f457c4ffc32e419fbbe41d59d89e8, type: 3}
-  - resourceType: 12
-    icon: {fileID: 21300000, guid: 5ea83ed0196a08a4c8d3a77397fd2438, type: 3}
-  - resourceType: 13
-    icon: {fileID: 21300000, guid: 5ea83ed0196a08a4c8d3a77397fd2438, type: 3}
-  - resourceType: 14
-    icon: {fileID: 21300000, guid: 5ea83ed0196a08a4c8d3a77397fd2438, type: 3}
 --- !u!1 &1350496976
 GameObject:
   m_ObjectHideFlags: 0
@@ -21247,6 +21260,8 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: 5ea83ed0196a08a4c8d3a77397fd2438, type: 3}
   - resourceType: 14
     icon: {fileID: 21300000, guid: 5ea83ed0196a08a4c8d3a77397fd2438, type: 3}
+  - resourceType: 15
+    icon: {fileID: 21300000, guid: eea083a6fddf5654d906ae55af0ce28f, type: 3}
 --- !u!1 &1724233419
 GameObject:
   m_ObjectHideFlags: 0
@@ -22008,17 +22023,19 @@ MonoBehaviour:
   ingredientSlots:
   - {fileID: 2039888932}
   - {fileID: 1651994818}
+  - {fileID: 881546221}
   resultSlot: {fileID: 1110315763}
   createButton: {fileID: 1182154060}
   equationText: {fileID: 0}
   recipeData:
     recipeName: "\u0425\u043B\u0435\u0431"
-    resultType: 7
-    resultIcon: {fileID: 21300000, guid: eea083a6fddf5654d906ae55af0ce28f, type: 3}
+    resultType: 15
     ingredients:
-    - resourceType: 1
+    - resourceType: 6
       amount: 1
-    - resourceType: 5
+    - resourceType: 7
+      amount: 1
+    - resourceType: 8
       amount: 1
 --- !u!1 &1794769390
 GameObject:
@@ -24965,7 +24982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2044810097
 RectTransform:
   m_ObjectHideFlags: 0
@@ -27932,7 +27949,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &5810570698045676320
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -29068,9 +29085,6 @@ MonoBehaviour:
   - resourceType: 6
     spawnPosition: {x: 0, y: 0}
   storageItemPrefab: {fileID: 4821767287982969349, guid: dea780d3148f84a4f9462559f1813c3a, type: 3}
-  resourceIcons:
-  - resourceType: 6
-    icon: {fileID: 21300000, guid: baab38330d7ac1f4581ba73331081af4, type: 3}
 --- !u!1 &8948665579556289955
 GameObject:
   m_ObjectHideFlags: 0
