@@ -70,4 +70,10 @@ crashlytics-build.properties
 # VS Code cache directory
 .vscode/
 
+/[Ll]ibrary/**/*.meta
+/[Tt]emp/**/*.meta
+/[Bb]uild/**/*.meta
+/[Oo]bj/**/*.meta
 
+!/[Aa]ssets/**/*.meta
+!/[Pp]ackages/**/*.meta
