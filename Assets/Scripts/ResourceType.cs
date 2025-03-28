@@ -14,5 +14,6 @@ public enum ResourceType
     Cake, 
     AppleCake,
     RaspberryCake,
-    StrawberryCake
+    StrawberryCake,
+    Сupcake,//Кекс
 }

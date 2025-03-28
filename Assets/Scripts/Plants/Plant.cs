@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class Plant : MonoBehaviour
 {
@@ -102,6 +103,8 @@ public class Plant : MonoBehaviour
     
     private void OnMouseDown()
     {
+        if(EventSystem.current.IsPointerOverGameObject())
+            return;
         if (plantBedUI != null)
         {
             if (!plantBedUI.activeSelf)
@@ -208,7 +211,8 @@ public class Plant : MonoBehaviour
     
     public void UpgradeBed()
     {
-        if (plantSettings == null || upgradeCount >= plantSettings.maxUpgrades)
+        if (plantSettings == null || upgradeCount >= plantSettings.maxUpgrades
+            || !CoinManager.instance.SubtractCoins(plantSettings.costUpgrade))
             return;
         
         upgradeCount++;

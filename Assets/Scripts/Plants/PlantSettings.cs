@@ -10,4 +10,5 @@ public class PlantSettings : ScriptableObject
     public int timeReductionPerUpgrade = 5;
     public int maxUpgrades = 7;
     public int minGrowthTime = 5;
+    public int costUpgrade = 30;
 }

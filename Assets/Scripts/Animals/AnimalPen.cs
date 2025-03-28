@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class AnimalPen : MonoBehaviour
 {
     [SerializeField] private ResourceType productType = ResourceType.None;
-    [SerializeField] private GameObject animalPrefab; // Префаб животного
+    [SerializeField] private GameObject animalPrefab;
     [SerializeField] private int initialAnimalCount = 2;
     [SerializeField] private int maxAnimalCount = 10;
     [SerializeField] private string productDisplayName = "Продукт";
+    [SerializeField] private int costUpgrade = 25;
     
     [Header("UI Elements")]
     [SerializeField] private GameObject penUIPanel;
@@ -99,6 +101,8 @@ public class AnimalPen : MonoBehaviour
     
     private void OnMouseDown()
     {
+        if(EventSystem.current.IsPointerOverGameObject())
+            return;
         if (penUIPanel != null)
         {
             // Закрываем другие UI перед открытием нашего
@@ -159,6 +163,9 @@ public class AnimalPen : MonoBehaviour
     
     private void UpgradePen()
     {
+        if (!CoinManager.instance.SubtractCoins(costUpgrade))
+            return;
+        
         if (animals.Count < maxAnimalCount)
         {
             AddAnimal();

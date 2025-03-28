@@ -1,12 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using TMPro;
 
 public class CoinManager : MonoBehaviour
 {
+    public static CoinManager instance;
+    public TMP_Text coinText;
+    
     private int coinCount;
-    public TMP_Text coinText; 
+
+    private void Awake()
+    {
+        if (instance)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
 
     void Start() {
         coinCount = 10; 
@@ -32,7 +45,7 @@ public class CoinManager : MonoBehaviour
             UpdateCoinText();
             return true; // Возвращаем true, если вычитание прошло успешно
         } else {
-            Debug.LogWarning("Не хватает монет!");
+            Debug.Log("Не хватает монет!");
             return false; // Возвращаем false, если недостаточно монет
         }
     }

@@ -18,3 +18,4 @@ MonoBehaviour:
   timeReductionPerUpgrade: 5
   maxUpgrades: 8
   minGrowthTime: 5
+  costUpgrade: 35
