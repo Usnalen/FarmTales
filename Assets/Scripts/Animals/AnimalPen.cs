@@ -159,6 +159,18 @@ public class AnimalPen : MonoBehaviour
             
             UpdateUITexts();
         }
+
+        if (AchievementManager.Instance != null)
+        {
+            if (productType == ResourceType.Eggs)
+            {
+                AchievementManager.Instance.AddEggsCollected(collectedProducts);
+            }
+            else if (productType == ResourceType.Milk)
+            {
+                AchievementManager.Instance.AddMilkCollected(collectedProducts);
+            }
+        }
     }
     
     private void UpgradePen()
