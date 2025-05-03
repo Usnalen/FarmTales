@@ -22,8 +22,23 @@ public abstract class BaseFormulaRow : MonoBehaviour
             createButton.onClick.AddListener(OnCreateButtonClicked);
         }
         
+        foreach (var slot in ingredientSlots)
+        {
+            slot.OnSlotChanged += OnIngredientSlotChanged;
+        }
+        
         InitializeRecipe();
+        UpdateCreateButtonState();
     }
+    
+    // Обработчик изменения слота ингредиента
+    protected void OnIngredientSlotChanged(IngredientSlot slot)
+    {
+        UpdateCreateButtonState();
+    }
+    
+    // Новый метод для обновления состояния кнопки создания
+    public abstract void UpdateCreateButtonState();
     
     // Абстрактные методы для реализации в дочерних классах
     protected abstract void InitializeRecipe();

@@ -167,6 +167,46 @@ public class MultiFormulaRow : BaseFormulaRow
         
         currentDisplayedRecipe = recipes[nextIndex];
         UpdateFormulaText();
+        UpdateCreateButtonState();
+    }
+    
+    public override void UpdateCreateButtonState()
+    {
+        if (createButton == null || recipes.Count == 0) return;
+
+        // Собираем ингредиенты из слотов
+        Dictionary<ResourceType, int> providedIngredients = new Dictionary<ResourceType, int>();
+        
+        foreach (IngredientSlot slot in ingredientSlots)
+        {
+            ResourceType type = slot.GetResourceType();
+            if (type != ResourceType.None)
+            {
+                int slotCount = slot.GetCount();
+                if (providedIngredients.ContainsKey(type))
+                {
+                    providedIngredients[type] += slotCount;
+                }
+                else
+                {
+                    providedIngredients[type] = slotCount;
+                }
+            }
+        }
+
+        // Проверяем, есть ли хотя бы один рецепт, для которого хватает ингредиентов
+        bool canCreate = false;
+        foreach (var recipe in recipes)
+        {
+            if (recipe.MatchesIngredients(providedIngredients))
+            {
+                canCreate = true;
+                break;
+            }
+        }
+        
+        // Включаем/выключаем кнопку
+        createButton.interactable = canCreate;
     }
     
     public List<Recipe> GetRecipes()
