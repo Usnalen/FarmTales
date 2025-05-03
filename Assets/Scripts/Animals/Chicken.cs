@@ -11,17 +11,21 @@ public class Chicken : Animal
     public override void ProduceProduct()
     {
         hasProduct = true;
-        
+    
         // Создаем яйцо над курицей
         if (eggPrefab != null && currentEgg == null)
         {
             Vector3 spawnPosition = (eggSpawnPoint != null) 
                 ? eggSpawnPoint.position 
                 : transform.position + new Vector3(0, 0.3f, 0);
-                
+            
+            // Проверяем, что позиция в пределах загона
+            spawnPosition = EnsurePositionWithinBounds(spawnPosition);
+            
             currentEgg = Instantiate(eggPrefab, spawnPosition, Quaternion.identity, transform.parent);
         }
     }
+
     
     public override void ResetProductionTimer()
     {

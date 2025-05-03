@@ -11,13 +11,16 @@ public class Cow : Animal
     public override void ProduceProduct()
     {
         hasProduct = true;
-        
+    
         if (milkPrefab != null && currentMilk == null)
         {
             Vector3 spawnPosition = (milkSpawnPoint != null) 
                 ? milkSpawnPoint.position 
                 : transform.position + new Vector3(0, 0.7f, 0);
-                
+            
+            // Проверяем, что позиция в пределах загона
+            spawnPosition = EnsurePositionWithinBounds(spawnPosition);
+            
             currentMilk = Instantiate(milkPrefab, spawnPosition, Quaternion.identity, transform.parent);
         }
     }

@@ -5,6 +5,7 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private BarnCapacityWarning capacityWarning;
     private static GameManager _instance;
     
     [System.Serializable]
@@ -78,25 +79,33 @@ public class GameManager : MonoBehaviour
         if (resourceType == ResourceType.None) 
             return false;
         
-        if (Barn.Instance != null && !Barn.Instance.CanAddResources(amount))
+        int newAmount = amount;
+        
+        if (Barn.Instance != null && !Barn.Instance.CanAddResources(newAmount))
         {
             Debug.Log("Амбар переполнен! Невозможно добавить ресурсы.");
-            return false;
+            capacityWarning?.ShowWarning();
+            if (Barn.Instance.CountCanAdd() > 0)
+            {
+                newAmount = Barn.Instance.CountCanAdd();
+            }
+            else
+            {
+                return true;
+            }
         }
-        
-        int oldCount = GetResourceCount(resourceType);
         
         if (resourceCounts.ContainsKey(resourceType))
         {
-            resourceCounts[resourceType] += amount;
+            resourceCounts[resourceType] += newAmount;
         }
         else
         {
-            resourceCounts[resourceType] = amount;
+            resourceCounts[resourceType] = newAmount;
         }
         
         int newCount = GetResourceCount(resourceType);
-        Debug.Log($"Добавлено {amount} x {resourceType}, стало {newCount}");
+        Debug.Log($"Добавлено {newAmount} x {resourceType}, стало {newCount}");
         
         UpdateResourceDisplay(resourceType);
         UpdateAllActiveFactories(resourceType);

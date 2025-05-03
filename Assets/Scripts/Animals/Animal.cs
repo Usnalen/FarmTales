@@ -105,4 +105,29 @@ public abstract class Animal : MonoBehaviour
         hasProduct = false;
         ResetProductionTimer();
     }
+    
+    protected Vector3 EnsurePositionWithinBounds(Vector3 position)
+    {
+        // Проверяем X координату
+        if (position.x < penBounds.min.x + 0.5f)
+        {
+            position.x = penBounds.min.x + 0.5f;
+        }
+        else if (position.x > penBounds.max.x - 0.5f)
+        {
+            position.x = penBounds.max.x - 0.5f;
+        }
+    
+        // Проверяем Y координату
+        if (position.y < penBounds.min.y + 0.5f)
+        {
+            position.y = penBounds.min.y + 0.5f;
+        }
+        else if (position.y > penBounds.max.y - 0.5f)
+        {
+            position.y = penBounds.max.y - 0.5f;
+        }
+    
+        return position;
+    }
 }

@@ -140,6 +140,37 @@ public class FormulaRow : BaseFormulaRow
         }
     }
     
+    public override void UpdateCreateButtonState()
+    {
+        if (createButton == null || recipe == null) return;
+
+        // Собираем ингредиенты из слотов
+        Dictionary<ResourceType, int> providedIngredients = new Dictionary<ResourceType, int>();
+        
+        foreach (IngredientSlot slot in ingredientSlots)
+        {
+            ResourceType type = slot.GetResourceType();
+            if (type != ResourceType.None)
+            {
+                int slotCount = slot.GetCount();
+                if (providedIngredients.ContainsKey(type))
+                {
+                    providedIngredients[type] += slotCount;
+                }
+                else
+                {
+                    providedIngredients[type] = slotCount;
+                }
+            }
+        }
+
+        // Проверяем, достаточно ли ингредиентов для создания продукта
+        bool canCreate = recipe.MatchesIngredients(providedIngredients);
+        
+        // Включаем/выключаем кнопку
+        createButton.interactable = canCreate;
+    }
+    
     public Recipe GetRecipe()
     {
         return recipe;
