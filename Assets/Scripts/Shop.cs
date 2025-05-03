@@ -167,6 +167,11 @@ public class Shop : MonoBehaviour
             Barn.Instance.UpdateBarnUI();
         }
         
+        if (AchievementManager.Instance != null)
+        {
+            AchievementManager.Instance.AddConfectionerySold(resourceType, amount);
+        }
+        
         Debug.Log($"Продано {amount} ед. {resourceType} за {totalPrice} монет");
     }
 }

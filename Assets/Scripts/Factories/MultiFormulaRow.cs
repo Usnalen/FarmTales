@@ -145,6 +145,16 @@ public class MultiFormulaRow : BaseFormulaRow
             // Устанавливаем новый результат
             resultSlot.SetResource(recipe.resultType, 1, resultIcon);
         }
+        
+        if (AchievementManager.Instance != null)
+        {
+            AchievementManager.Instance.AddProducedItem(recipe.resultType, 1);
+    
+            if (recipe.resultType == ResourceType.Bread)
+            {
+                AchievementManager.Instance.AddBreadBaked(1);
+            }
+        }
     }
     
     // Метод для циклического переключения между рецептами (можно привязать к кнопке)
