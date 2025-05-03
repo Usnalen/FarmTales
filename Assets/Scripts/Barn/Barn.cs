@@ -16,11 +16,12 @@ public class Barn : MonoBehaviour
     [SerializeField] private TextMeshProUGUI capacityText; // Текст для отображения текущей вместимост
     
     // Словарь иконок ресурсов для быстрого доступа
-    private Dictionary<ResourceType, Sprite> resourceIconsDict = new Dictionary<ResourceType, Sprite>();
+    private int _totalItems;
     
     // Ссылка на экземпляр класса для организации паттерна Singleton
     private static Barn _instance;
     public static Barn Instance => _instance;
+    public float MaxCapacity => maxCapacity;
     
     // Событие при обновлении амбара
     public delegate void OnBarnUpdatedDelegate();
@@ -101,6 +102,8 @@ public class Barn : MonoBehaviour
         {
             capacityText.text = $"Вместимость: {totalItems}/{maxCapacity}";
         }
+
+        _totalItems = totalItems;
     }
     
     private void CreateResourceDisplay(ResourceType resourceType, int count)
@@ -186,5 +189,10 @@ public class Barn : MonoBehaviour
     {
         public ResourceType resourceType;
         public Sprite icon;
+    }
+
+    public int CountCanAdd()
+    {
+        return maxCapacity - _totalItems;
     }
 }
